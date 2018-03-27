@@ -2,6 +2,7 @@ package com.example.hansaanuradhawickramanayake.hikerswatch;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -13,10 +14,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
 
+    Intent mapsIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
                 updateLocationInfo(location);
 
+                mapsIntent = new Intent(getApplicationContext(), MapsActivity.class);
+                mapsIntent.putExtra("latitude", location.getLatitude());
+                mapsIntent.putExtra("longitude", location.getLongitude());
             }
 
             @Override
@@ -86,13 +90,13 @@ public class MainActivity extends AppCompatActivity {
 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED ){
 
-                startListenning();
+                startListening();
             }
 
         }
     }
 
-    public void startListenning(){
+    public void startListening(){
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
@@ -108,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
         accuracyTextView = findViewById(R.id.accuracyTextView);
         altitudeTextView = findViewById(R.id.altitudeTextView);
         addressTextView = findViewById(R.id.addressTextView);
+
+
 
         if (String.valueOf(location.getLatitude()) != null){
 
@@ -172,6 +178,13 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
 
         }
+    }
+
+    public void getLocation(View view){
+
+
+        startActivity(mapsIntent);
+
     }
 
 }
